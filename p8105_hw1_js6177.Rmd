@@ -1,0 +1,49 @@
+---
+title: "p8105_hw1_js6177"
+author: "Jiayi Shi"
+output: github_document
+---
+```{r echo=FALSE,message=FALSE}
+library(tidyverse)
+```
+## Problem 1
+### Description of dataset
+I first load the `penguins` dataset and take a look at its structure.
+```{r}
+data("penguins", package = "palmerpenguins")
+str(penguins)
+```
+The dataset is conprised of the following varibales: `r colnames(penguins)`. The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean flipper length is `r round(mean(penguins$flipper_length_mm,na.rm=TRUE),2)` mm (rounded to 2 decimal places).
+
+### Scatterplot
+I make a scatterplot of `flipper_length_mm` (y) vs `bill_length_mm` (x) and save it to my project directory.
+```{r warning=FALSE,message=FALSE}
+ggplot(penguins,aes(x=bill_length_mm,y=flipper_length_mm,color=species))+geom_point()
+ggsave('scatterplot.pdf')
+```
+
+## Problem 2
+I use `tibble` to create a dataframe `dt` comprised of a numeric variable, a logic variable, a character variable and a factor variable.
+```{r}
+dt = tibble(
+  var_norm = rnorm(10),
+  var_logic = var_norm>0,
+  var_char = c('a','b','c','d','e','f','g','h','i','j'),
+  var_factor = factor(c('male','male','female','other','female','female','male','male','other','other'))
+)
+```
+I then take the mean of each varibale. It works for both numeric and logic variables but does not work for character and factor variables.
+```{r warning=FALSE}
+mean(pull(dt,var_norm))
+mean(pull(dt,var_logic))
+mean(pull(dt,var_char))
+mean(pull(dt,var_factor))
+```
+I use `as.numeric`function to convert data type. 
+Logic and factor variables can be converted to numeric type (TRUE 1 FALSE 0; three levels 1,2,3) while character variable can not (NA). When I try to take the mean, the logic value is taken to be 0 for FALSE and 1 for TRUE.
+```{r eval=FALSE,warning=FALSE}
+as.numeric(dt$var_logic)
+as.numeric(dt$var_char)
+as.numeric(dt$var_factor)
+```
+
